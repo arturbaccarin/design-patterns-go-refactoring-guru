@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 https://refactoring.guru/design-patterns/abstract-factory
 
@@ -91,4 +93,89 @@ type Sofa interface {
 
 type CoffeeTable interface {
 	setShape(shape string)
+}
+
+// Concrete products are created by corresponding concrete
+// factories.
+type ModernChair struct {
+}
+
+func (c *ModernChair) sitOn() {
+	fmt.Println("sit on modern chair")
+}
+
+func (c *ModernChair) setNumberOfLegs(numberOfLegs int) {
+	fmt.Println("set number of legs for modern chair")
+}
+
+// Concrete product
+type ModernSofa struct {
+}
+
+func (s *ModernSofa) sitOn() {
+	fmt.Println("sit on modern sofa")
+}
+
+func (s *ModernSofa) setNumberOfSeats(numberOfSeats int) {
+	fmt.Println("set number of seats for modern sofa")
+}
+
+// Concrete product
+type ModernCoffeeTable struct {
+}
+
+func (c *ModernCoffeeTable) setShape(shape string) {
+	fmt.Println("set shape for modern coffee table")
+}
+
+// Concrete product
+type VictorianChair struct {
+}
+
+func (c *VictorianChair) sitOn() {
+	fmt.Println("sit on victorian chair")
+}
+
+func (c *VictorianChair) setNumberOfLegs(numberOfLegs int) {
+	fmt.Println("set number of legs for victorian chair")
+}
+
+// Concrete product
+type VictorianSofa struct {
+}
+
+func (s *VictorianSofa) sitOn() {
+	fmt.Println("sit on victorian sofa")
+}
+
+func (s *VictorianSofa) setNumberOfSeats(numberOfSeats int) {
+	fmt.Println("set number of seats for victorian sofa")
+}
+
+// Concrete product
+type VictorianCoffeeTable struct {
+}
+
+func (c *VictorianCoffeeTable) setShape(shape string) {
+	fmt.Println("set shape for victorian coffee table")
+}
+
+func GetFurnitureFactory(furniture string) (FurnitureFactory, error) {
+	if furniture == "modern" {
+		return &ModernFurnitureFactory{}, nil
+	} else if furniture == "victorian" {
+		return &VictorianFurnitureFactory{}, nil
+	}
+	return nil, fmt.Errorf("unknown furniture type: %s", furniture)
+}
+
+func main() {
+	furnitureFactory, err := GetFurnitureFactory("victorian")
+	if err != nil {
+		panic(err)
+	}
+
+	chair := furnitureFactory.createChair()
+	chair.setNumberOfLegs(4)
+	chair.sitOn()
 }
