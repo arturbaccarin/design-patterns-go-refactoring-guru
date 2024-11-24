@@ -42,10 +42,10 @@ The client code has to work with both factories and products via their respectiv
 // themselves. A family of products may have several variants,
 // but the products of one variant are incompatible with the
 // products of another variant.
-type FurnitureFactory interface {
-	createChair() Chair
-	createSofa() Sofa
-	createCoffeeTable() CoffeeTable
+type GUIFactory interface {
+	createButton() Button
+	createHeader() Header
+	createFooter() Footer
 }
 
 // Concrete factories produce a family of products that belong
@@ -53,134 +53,123 @@ type FurnitureFactory interface {
 // resulting products are compatible. Signatures of the concrete
 // factory's methods return an abstract product, while inside
 // the method a concrete product is instantiated.
-type ModernFurnitureFactory struct {
+type WindowsGUIFactory struct {
 }
 
-func (f *ModernFurnitureFactory) createChair() Chair {
-	return &ModernChair{}
+func (w *WindowsGUIFactory) createButton() Button {
+	return &WindowsButton{}
 }
 
-func (f *ModernFurnitureFactory) createSofa() Sofa {
-	return &ModernSofa{}
+func (w *WindowsGUIFactory) createHeader() Header {
+	return &WindowsHeader{}
 }
 
-func (f *ModernFurnitureFactory) createCoffeeTable() CoffeeTable {
-	return &ModernCoffeeTable{}
+func (w *WindowsGUIFactory) createFooter() Footer {
+	return &WindowsFooter{}
 }
 
-type VictorianFurnitureFactory struct {
+type LinuxGUIFactory struct {
 }
 
-func (f *VictorianFurnitureFactory) createChair() Chair {
-	return &VictorianChair{}
+func (l *LinuxGUIFactory) createButton() Button {
+	return &LinuxButton{}
 }
 
-func (f *VictorianFurnitureFactory) createSofa() Sofa {
-	return &VictorianSofa{}
+func (l *LinuxGUIFactory) createHeader() Header {
+	return &LinuxHeader{}
 }
 
-func (f *VictorianFurnitureFactory) createCoffeeTable() CoffeeTable {
-	return &VictorianCoffeeTable{}
+func (l *LinuxGUIFactory) createFooter() Footer {
+	return &LinuxFooter{}
 }
 
 // Each distinct product of a product family should have a base
 // interface. All variants of the product must implement this
 // interface.
-type Chair interface {
-	sitOn()
-	setNumberOfLegs(numberOfLegs int)
+type Button interface {
+	clickOn()
 }
 
-type Sofa interface {
-	sitOn()
-	setNumberOfSeats(numberOfSeats int)
+type Header interface {
+	readImage()
 }
 
-type CoffeeTable interface {
-	setShape(shape string)
+type Footer interface {
+	readNote()
 }
 
 // Concrete products are created by corresponding concrete
 // factories.
-type ModernChair struct {
+type WindowsButton struct {
 }
 
-func (c *ModernChair) sitOn() {
-	fmt.Println("sit on modern chair")
-}
-
-func (c *ModernChair) setNumberOfLegs(numberOfLegs int) {
-	fmt.Println("set number of legs for modern chair")
+func (w *WindowsButton) clickOn() {
+	fmt.Println("Clicking Windows button")
 }
 
 // Concrete product
-type ModernSofa struct {
+type WindowsHeader struct {
 }
 
-func (s *ModernSofa) sitOn() {
-	fmt.Println("sit on modern sofa")
-}
-
-func (s *ModernSofa) setNumberOfSeats(numberOfSeats int) {
-	fmt.Println("set number of seats for modern sofa")
+func (w *WindowsHeader) readImage() {
+	fmt.Println("Reading Windows image")
 }
 
 // Concrete product
-type ModernCoffeeTable struct {
+type WindowsFooter struct {
 }
 
-func (c *ModernCoffeeTable) setShape(shape string) {
-	fmt.Println("set shape for modern coffee table")
-}
-
-// Concrete product
-type VictorianChair struct {
-}
-
-func (c *VictorianChair) sitOn() {
-	fmt.Println("sit on victorian chair")
-}
-
-func (c *VictorianChair) setNumberOfLegs(numberOfLegs int) {
-	fmt.Println("set number of legs for victorian chair")
+func (w *WindowsFooter) readNote() {
+	fmt.Println("Reading Windows note")
 }
 
 // Concrete product
-type VictorianSofa struct {
+type LinuxButton struct {
 }
 
-func (s *VictorianSofa) sitOn() {
-	fmt.Println("sit on victorian sofa")
-}
-
-func (s *VictorianSofa) setNumberOfSeats(numberOfSeats int) {
-	fmt.Println("set number of seats for victorian sofa")
+func (l *LinuxButton) clickOn() {
+	fmt.Println("Clicking Linux button")
 }
 
 // Concrete product
-type VictorianCoffeeTable struct {
+type LinuxHeader struct {
 }
 
-func (c *VictorianCoffeeTable) setShape(shape string) {
-	fmt.Println("set shape for victorian coffee table")
+func (l *LinuxHeader) readImage() {
+	fmt.Println("Reading Linux image")
 }
 
-func GetFurnitureFactory(furniture string) (FurnitureFactory, error) {
-	if furniture == "modern" {
-		return &ModernFurnitureFactory{}, nil
-	} else if furniture == "victorian" {
-		return &VictorianFurnitureFactory{}, nil
+// Concrete product
+type LinuxFooter struct {
+}
+
+func (l *LinuxFooter) readNote() {
+	fmt.Println("Reading Linux note")
+}
+
+func GetGUIFactory(furniture string) (GUIFactory, error) {
+	switch furniture {
+	case "windows":
+		return &WindowsGUIFactory{}, nil
+	case "linux":
+		return &LinuxGUIFactory{}, nil
+	default:
+		return nil, fmt.Errorf("unknown GUI type: %s", furniture)
 	}
-	return nil, fmt.Errorf("unknown furniture type: %s", furniture)
 }
 
 func main() {
-	furnitureFactory, err := GetFurnitureFactory("victorian")
+	GUIFactory, err := GetGUIFactory("linux")
 	if err != nil {
 		panic(err)
 	}
 
-	chair := furnitureFactory.createChair()
-	chair.setNumberOfLegs(4)
-	chair.sitOn()
+	button := GUIFactory.createButton()
+	button.clickOn()
+
+	header := GUIFactory.createHeader()
+	header.readImage()
+
+	footer := GUIFactory.createFooter()
+	footer.readNote()
 }
