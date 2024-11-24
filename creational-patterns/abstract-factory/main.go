@@ -8,6 +8,11 @@ https://refactoring.guru/design-patterns/abstract-factory
 Abstract Factory is a creational design pattern that lets you produce families of
 related objects without specifying their concrete classes.
 
+You need a way to create individual furniture objects so that they match other objects of the same family.
+Customers get quite mad when they receive non-matching furniture. (Think about a device interface, all buttons, pages and more need to be iOS or android)
+
+Also, you don’t want to change existing code when adding new products or families of products to the program.
+
 The first thing the Abstract Factory pattern suggests is to explicitly declare
 interfaces for each distinct product of the product family (e.g., chair, sofa or coffee table).
 
