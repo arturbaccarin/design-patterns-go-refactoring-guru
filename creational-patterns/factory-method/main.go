@@ -22,83 +22,59 @@ However, we can still implement the basic version of the pattern, the Simple Fac
 */
 
 // Product interface: declares the interface, which is common to all objects that can be produced by the creator and its subclasses.
-type DeliveryService interface {
-	Deliver()
-	setName(name string)
-	setTime(time int)
-	getName() string
-	getTime() int
+type Button interface {
+	render()
+	onClick()
 }
 
 // Concrete product: Concrete Products are different implementations of the product interface.
-type DeliveryType struct {
-	name string
-	time int
+type WindowsButton struct {
 }
 
-func (d *DeliveryType) setName(name string) {
-	d.name = name
+func (b *WindowsButton) render() {
+	fmt.Println("Rendering Windows button")
 }
 
-func (d *DeliveryType) getName() string {
-	return d.name
+func (b *WindowsButton) onClick() {
+	fmt.Println("Clicking Windows button")
 }
 
-func (d *DeliveryType) setTime(time int) {
-	d.time = time
+type HTMLButton struct {
 }
 
-func (d *DeliveryType) getTime() int {
-	return d.time
+func (b *HTMLButton) render() {
+	fmt.Println("Rendering HTML button")
 }
 
-func (d *DeliveryType) Deliver() {
-	fmt.Printf("Delivery %s in %d hours\n", d.name, d.time)
+func (b *HTMLButton) onClick() {
+	fmt.Println("Clicking HTML button")
 }
 
 // Concrete Creators override the base factory method so it returns a different type of product.
-type Ship struct {
-	DeliveryType
+func newWindowsButton() Button {
+	return &WindowsButton{}
 }
 
-func newShip() DeliveryService {
-	return &Ship{
-		DeliveryType: DeliveryType{
-			name: "Ship",
-			time: 3,
-		},
-	}
-}
-
-// Concrete Creators
-type Airplane struct {
-	DeliveryType
-}
-
-func newAirplane() DeliveryService {
-	return &Airplane{
-		DeliveryType: DeliveryType{
-			name: "Airplane",
-			time: 1,
-		},
-	}
+func newHTMLButton() Button {
+	return &HTMLButton{}
 }
 
 // Factory
-func createDeliveryService(deliveryType string) DeliveryService {
-	switch deliveryType {
-	case "ship":
-		return newShip()
-	case "airplane":
-		return newAirplane()
+func createButton(system string) Button {
+	switch system {
+	case "windows":
+		return newWindowsButton()
+	case "web":
+		return newHTMLButton()
 	default:
 		return nil
 	}
 }
 
 func main() {
-	transport := createDeliveryService("airplane")
-	transport.Deliver()
+	button := createButton("web")
+	button.render()
+	button.onClick()
 }
 
 /*
