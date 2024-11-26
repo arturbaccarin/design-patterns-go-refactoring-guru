@@ -39,6 +39,17 @@ type Builder interface {
 	setGPS()
 }
 
+func getBuilder(builderType string) Builder {
+	switch builderType {
+	case "car":
+		return newCarBuilder()
+	case "manual":
+		return newManualBuilder()
+	default:
+		return nil
+	}
+}
+
 // Product
 // Using the Builder pattern makes sense only when your products
 // are quite complex and require extensive configuration. The
@@ -51,61 +62,102 @@ type Car struct {
 	gps          bool
 }
 
+func (c *Car) String() {
+	println("Car")
+	println("seats: ", c.seats)
+	println("engine: ", c.engine)
+	println("trip computer: ", c.tripComputer)
+	println("gps: ", c.gps)
+}
+
+type Manual struct {
+	seats        string
+	engine       string
+	tripComputer string
+	gps          string
+}
+
+func (m *Manual) String() {
+	println("Manual")
+	println("seats: ", m.seats)
+	println("engine: ", m.engine)
+	println("trip computer: ", m.tripComputer)
+	println("gps: ", m.gps)
+}
+
 // Concrete Builder
 // Unlike other creational patterns, builder lets you construct
 // products that don't follow the common interface.
-type CarManualBuilder struct {
+type CarBuilder struct {
 	seats        int
 	engine       string
 	tripComputer bool
 	gps          bool
 }
 
-func newCarManualBuilder() *CarManualBuilder {
-	return &CarManualBuilder{}
+func newCarBuilder() Builder {
+	return &CarBuilder{}
 }
 
-func (b *CarManualBuilder) setSeats() {
+func (b *CarBuilder) setSeats() {
 	b.seats = 4
 }
 
-func (b *CarManualBuilder) setEngine() {
+func (b *CarBuilder) setEngine() {
 	b.engine = "1.6"
 }
 
-func (b *CarManualBuilder) setTripComputer() {
+func (b *CarBuilder) setTripComputer() {
 	b.tripComputer = false
 }
 
-func (b *CarManualBuilder) setGPS() {
+func (b *CarBuilder) setGPS() {
 	b.gps = false
 }
 
-type CarAutomaticBuilder struct {
-	seats        int
+func (b *CarBuilder) getProduct() Car {
+	return Car{
+		seats:        b.seats,
+		engine:       b.engine,
+		tripComputer: b.tripComputer,
+		gps:          b.gps,
+	}
+}
+
+type ManualBuilder struct {
+	seats        string
 	engine       string
-	tripComputer bool
-	gps          bool
+	tripComputer string
+	gps          string
 }
 
-func newCarAutomaticBuilder() *CarAutomaticBuilder {
-	return &CarAutomaticBuilder{}
+func newManualBuilder() Builder {
+	return &ManualBuilder{}
 }
 
-func (b *CarAutomaticBuilder) setSeats() {
-	b.seats = 2
+func (b *ManualBuilder) setSeats() {
+	b.seats = "leather"
 }
 
-func (b *CarAutomaticBuilder) setEngine() {
-	b.engine = "1.0"
+func (b *ManualBuilder) setEngine() {
+	b.engine = "sport"
 }
 
-func (b *CarAutomaticBuilder) setTripComputer() {
-	b.tripComputer = true
+func (b *ManualBuilder) setTripComputer() {
+	b.tripComputer = "complete"
 }
 
-func (b *CarAutomaticBuilder) setGPS() {
-	b.gps = true
+func (b *ManualBuilder) setGPS() {
+	b.gps = "yes"
+}
+
+func (b *ManualBuilder) getProduct() Manual {
+	return Manual{
+		seats:        b.seats,
+		engine:       b.engine,
+		tripComputer: b.tripComputer,
+		gps:          b.gps,
+	}
 }
 
 // The director is only responsible for executing the building
@@ -113,3 +165,32 @@ func (b *CarAutomaticBuilder) setGPS() {
 // products according to a specific order or configuration.
 // Strictly speaking, the director class is optional, since the
 // client can control builders directly.
+type Director struct {
+	builder Builder
+}
+
+func newDirector(builder Builder) *Director {
+	return &Director{builder: builder}
+}
+
+func (d *Director) construct() {
+	d.builder.setSeats()
+	d.builder.setEngine()
+	d.builder.setTripComputer()
+	d.builder.setGPS()
+}
+
+func main() {
+	carBuilder := getBuilder("car")
+
+	director := newDirector(carBuilder)
+	director.construct()
+	car := director.builder.getProduct()
+	car.String()
+
+	manualBuilder := getBuilder("manual")
+	director = newDirector(manualBuilder)
+	director.construct()
+	manual := manualBuilder.getProduct()
+	manual.String()
+}
