@@ -37,14 +37,15 @@ type Builder interface {
 	setEngine()
 	setTripComputer()
 	setGPS()
+	getCar() Car
 }
 
 func getBuilder(builderType string) Builder {
 	switch builderType {
-	case "car":
-		return newCarBuilder()
-	case "manual":
-		return newManualBuilder()
+	case "suv":
+		return newSUVBuilder()
+	case "sport":
+		return newSportBuilder()
 	default:
 		return nil
 	}
@@ -63,59 +64,43 @@ type Car struct {
 }
 
 func (c *Car) String() {
-	println("Car")
 	println("seats: ", c.seats)
 	println("engine: ", c.engine)
 	println("trip computer: ", c.tripComputer)
 	println("gps: ", c.gps)
 }
 
-type Manual struct {
-	seats        string
-	engine       string
-	tripComputer string
-	gps          string
-}
-
-func (m *Manual) String() {
-	println("Manual")
-	println("seats: ", m.seats)
-	println("engine: ", m.engine)
-	println("trip computer: ", m.tripComputer)
-	println("gps: ", m.gps)
-}
-
 // Concrete Builder
 // Unlike other creational patterns, builder lets you construct
 // products that don't follow the common interface.
-type CarBuilder struct {
+type SUVBuilder struct {
 	seats        int
 	engine       string
 	tripComputer bool
 	gps          bool
 }
 
-func newCarBuilder() Builder {
-	return &CarBuilder{}
+func newSUVBuilder() Builder {
+	return &SUVBuilder{}
 }
 
-func (b *CarBuilder) setSeats() {
+func (b *SUVBuilder) setSeats() {
 	b.seats = 4
 }
 
-func (b *CarBuilder) setEngine() {
+func (b *SUVBuilder) setEngine() {
 	b.engine = "1.6"
 }
 
-func (b *CarBuilder) setTripComputer() {
-	b.tripComputer = false
+func (b *SUVBuilder) setTripComputer() {
+	b.tripComputer = true
 }
 
-func (b *CarBuilder) setGPS() {
-	b.gps = false
+func (b *SUVBuilder) setGPS() {
+	b.gps = true
 }
 
-func (b *CarBuilder) getProduct() Car {
+func (b *SUVBuilder) getCar() Car {
 	return Car{
 		seats:        b.seats,
 		engine:       b.engine,
@@ -124,35 +109,35 @@ func (b *CarBuilder) getProduct() Car {
 	}
 }
 
-type ManualBuilder struct {
-	seats        string
+type SportBuilder struct {
+	seats        int
 	engine       string
-	tripComputer string
-	gps          string
+	tripComputer bool
+	gps          bool
 }
 
-func newManualBuilder() Builder {
-	return &ManualBuilder{}
+func newSportBuilder() Builder {
+	return &SportBuilder{}
 }
 
-func (b *ManualBuilder) setSeats() {
-	b.seats = "leather"
+func (b *SportBuilder) setSeats() {
+	b.seats = 2
 }
 
-func (b *ManualBuilder) setEngine() {
-	b.engine = "sport"
+func (b *SportBuilder) setEngine() {
+	b.engine = "3.0"
 }
 
-func (b *ManualBuilder) setTripComputer() {
-	b.tripComputer = "complete"
+func (b *SportBuilder) setTripComputer() {
+	b.tripComputer = false
 }
 
-func (b *ManualBuilder) setGPS() {
-	b.gps = "yes"
+func (b *SportBuilder) setGPS() {
+	b.gps = false
 }
 
-func (b *ManualBuilder) getProduct() Manual {
-	return Manual{
+func (b *SportBuilder) getCar() Car {
+	return Car{
 		seats:        b.seats,
 		engine:       b.engine,
 		tripComputer: b.tripComputer,
@@ -173,24 +158,20 @@ func newDirector(builder Builder) *Director {
 	return &Director{builder: builder}
 }
 
-func (d *Director) construct() {
+func (d *Director) construct() Car {
 	d.builder.setSeats()
 	d.builder.setEngine()
 	d.builder.setTripComputer()
 	d.builder.setGPS()
+
+	return d.builder.getCar()
 }
 
 func main() {
-	carBuilder := getBuilder("car")
+	builder := getBuilder("suv")
 
-	director := newDirector(carBuilder)
-	director.construct()
-	car := director.builder.getProduct()
+	director := newDirector(builder)
+
+	car := director.construct()
 	car.String()
-
-	manualBuilder := getBuilder("manual")
-	director = newDirector(manualBuilder)
-	director.construct()
-	manual := manualBuilder.getProduct()
-	manual.String()
 }
