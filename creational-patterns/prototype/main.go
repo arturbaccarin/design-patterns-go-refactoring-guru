@@ -3,6 +3,8 @@ package main
 import "fmt"
 
 /*
+https://refactoring.guru/design-patterns/prototype
+
 Prototype is a creational design pattern that lets you copy existing objects without making your code dependent on their classes.
 
 Say you have an object, and you want to create an exact copy of it.
