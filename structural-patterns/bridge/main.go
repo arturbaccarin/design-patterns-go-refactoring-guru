@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 https://refactoring.guru/design-patterns/bridge
 
@@ -72,3 +74,60 @@ These two hierarchies communicate with each other via a Bridge,
 where the Abstraction (computer) contains a reference to the Implementation (printer).
 Both the abstraction and implementation can be developed independently without affecting each other.
 */
+
+// Abstraction Class
+type Computer interface {
+	Print()
+	SetPrinter(Printer)
+}
+
+// Refined Abstraction
+type Mac struct {
+	printer Printer
+}
+
+func (m *Mac) Print() {
+	fmt.Println("Print request for mac")
+	m.printer.PrintFile()
+}
+
+func (m *Mac) SetPrinter(p Printer) {
+	m.printer = p
+}
+
+type Windows struct {
+	printer Printer
+}
+
+func (m *Windows) Print() {
+	fmt.Println("Print request for windows")
+	m.printer.PrintFile()
+}
+
+func (m *Windows) SetPrinter(p Printer) {
+	m.printer = p
+}
+
+// Implementation Class
+type Printer interface {
+	PrintFile()
+}
+
+// Refined Implementation
+type Epson struct{}
+
+func (e *Epson) PrintFile() {
+	fmt.Println("Epson printer file")
+}
+
+type HP struct{}
+
+func (h *HP) PrintFile() {
+	fmt.Println("HP printer file")
+}
+
+func main() {
+	mac := &Mac{}
+	mac.SetPrinter(&HP{})
+	mac.Print()
+}
