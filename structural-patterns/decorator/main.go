@@ -18,4 +18,10 @@ However, inheritance has several serious caveats that you need to be aware of.
 One of the ways to overcome these caveats is by using Aggregation or Composition instead of Inheritance.
 Both of the alternatives work almost the same way: one object has a reference to another and delegates it some work,
 whereas with inheritance, the object itself is able to do that work, inheriting the behavior from its superclass.
+
+With this new approach you can easily substitute the linked “helper” object with another, changing the behavior of the container at runtime.
+
+“Wrapper” is the alternative nickname for the Decorator pattern that clearly expresses the main idea of the pattern.
+A wrapper is an object that can be linked with some target object. The wrapper contains the same set of methods as the target and delegates
+to it all requests it receives. However, the wrapper may alter the result by doing something either before or after it passes the request to the target.
 */
