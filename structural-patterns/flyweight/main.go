@@ -26,4 +26,6 @@ while the color and sprite remain constant for each particle.
 Intrinsic state: constant data of an object. It lives within the object; other objects can only read it, not change it.
 
 Extrinsic state: the rest of the object’s state, often altered “from the outside” by other objects.
+
+The Flyweight pattern suggests that you stop storing the extrinsic state inside the object.
 */
