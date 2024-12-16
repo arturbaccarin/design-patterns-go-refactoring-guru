@@ -28,4 +28,9 @@ Intrinsic state: constant data of an object. It lives within the object; other o
 Extrinsic state: the rest of the object’s state, often altered “from the outside” by other objects.
 
 The Flyweight pattern suggests that you stop storing the extrinsic state inside the object.
+Instead, you should pass this state to specific methods which rely on it.
+
+Only the intrinsic state stays within the object, letting you reuse it in different contexts.
+
+Where does the extrinsic state move to?
 */
