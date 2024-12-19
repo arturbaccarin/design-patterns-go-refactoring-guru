@@ -58,12 +58,37 @@ If not, it creates a new flyweight and adds it to the pool.
 There are several options where this method could be placed. The most obvious place is a flyweight container.
 Alternatively, you could create a new factory class. Or you could make the factory method static and put it
 inside an actual flyweight class.
+
+Flyweight is a structural design pattern that allows programs to support vast quantities of objects by keeping their
+memory consumption low.
 */
 
 /*
-The pattern extracts the repeating intrinsic state from a main Tree class and moves it into the flyweight class TreeType.
+In a game of Counter-Strike, Terrorist and Counter-Terrorist have a different type of dress.
+For simplicity, let’s assume that both Terrorist and Counter-Terrorists have one dress type each.
+The dress object is embedded in the player object as below.
 
-Now instead of storing the same data in multiple objects, it’s kept in just a few flyweight objects and linked to appropriate
-Tree objects which act as contexts. The client code creates new tree objects using the flyweight factory,
-which encapsulates the complexity of searching for the right object and reusing it if needed.
+Let’s say there are 5 Terrorists and 5 Counter-Terrorist, so a total of 10 players. Now there are two options concerning dress.
+
+1. Each of the 10 player objects creates a different dress object and embeds them. A total of 10 dress objects will be created.
+
+We create two dress objects:
+
+1. Single Terrorist Dress Object: This will be shared across 5 Terrorists.
+2. Single Counter-Terrorist Dress Object: This will be shared across 5 Counter-Terrorist.
+
+As you can see in Approach 1, a total of 10 dress objects are created while in approach 2 only 2 dress objects are created.
+The second approach is what we follow in the Flyweight design pattern. The two dress objects which we created are called
+the flyweight objects.
+
+The Flyweight pattern takes out the common parts and creates flyweight objects.
+These flyweight objects (dress) can then be shared among multiple objects (player).
+This drastically reduces the number of dress objects, and the good part is that even if
+you create more players, only two dress objects will be sufficient.
 */
+type player struct {
+	dress      dress
+	playerType string // Can be T or CT
+	lat        int
+	long       int
+}
