@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 https://refactoring.guru/design-patterns/flyweight
 
@@ -85,10 +87,144 @@ The Flyweight pattern takes out the common parts and creates flyweight objects.
 These flyweight objects (dress) can then be shared among multiple objects (player).
 This drastically reduces the number of dress objects, and the good part is that even if
 you create more players, only two dress objects will be sufficient.
+
+Intrinsic State: Dress in the intrinsic state as it can be shared across multiple Terrorist and Counter-Terrorist objects.
+
+Extrinsic State: Player location and the player weapon are an extrinsic state as they are different for every object.
 */
-type player struct {
-	dress      dress
-	playerType string // Can be T or CT
+
+// flyweight interface
+type Dress interface {
+	getColor() string
+}
+
+// flyweight factory
+const (
+	//TerroristDressType terrorist dress type
+	TerroristDressType = "tDress"
+	//CounterTerroristDressType terrorist dress type
+	CounterTerroristDressType = "ctDress"
+)
+
+var (
+	dressFactorySingleInstance = &DressFactory{
+		dressMap: make(map[string]Dress),
+	}
+)
+
+type DressFactory struct {
+	dressMap map[string]Dress
+}
+
+func (d *DressFactory) getDressByType(dressType string) (Dress, error) {
+	if d.dressMap[dressType] != nil {
+		return d.dressMap[dressType], nil
+	}
+
+	if dressType == TerroristDressType {
+		d.dressMap[dressType] = newTerroristDress()
+		return d.dressMap[dressType], nil
+	}
+	if dressType == CounterTerroristDressType {
+		d.dressMap[dressType] = newCounterTerroristDress()
+		return d.dressMap[dressType], nil
+	}
+
+	return nil, fmt.Errorf("Wrong dress type passed")
+}
+
+func getDressFactorySingleInstance() *DressFactory {
+	return dressFactorySingleInstance
+}
+
+// Concrete flyweight object
+type CounterTerroristDress struct {
+	color string
+}
+
+func (c *CounterTerroristDress) getColor() string {
+	return c.color
+}
+
+func newCounterTerroristDress() *CounterTerroristDress {
+	return &CounterTerroristDress{color: "green"}
+}
+
+type TerroristDress struct {
+	color string
+}
+
+func (t *TerroristDress) getColor() string {
+	return t.color
+}
+
+func newTerroristDress() *TerroristDress {
+	return &TerroristDress{color: "red"}
+}
+
+// Context
+type Player struct {
+	dress      Dress
+	playerType string
 	lat        int
 	long       int
+}
+
+func newPlayer(playerType, dressType string) *Player {
+	dress, _ := getDressFactorySingleInstance().getDressByType(dressType)
+	return &Player{
+		playerType: playerType,
+		dress:      dress,
+	}
+}
+
+func (p *Player) newLocation(lat, long int) {
+	p.lat = lat
+	p.long = long
+}
+
+// Client code
+type game struct {
+	terrorists        []*Player
+	counterTerrorists []*Player
+}
+
+func newGame() *game {
+	return &game{
+		terrorists:        make([]*Player, 1),
+		counterTerrorists: make([]*Player, 1),
+	}
+}
+
+func (c *game) addTerrorist(dressType string) {
+	player := newPlayer("T", dressType)
+	c.terrorists = append(c.terrorists, player)
+	return
+}
+
+func (c *game) addCounterTerrorist(dressType string) {
+	player := newPlayer("CT", dressType)
+	c.counterTerrorists = append(c.counterTerrorists, player)
+	return
+}
+
+func main() {
+	game := newGame()
+
+	//Add Terrorist
+	game.addTerrorist(TerroristDressType)
+	game.addTerrorist(TerroristDressType)
+	game.addTerrorist(TerroristDressType)
+	game.addTerrorist(TerroristDressType)
+
+	//Add CounterTerrorist
+	game.addCounterTerrorist(CounterTerroristDressType)
+	game.addCounterTerrorist(CounterTerroristDressType)
+	game.addCounterTerrorist(CounterTerroristDressType)
+
+	dressFactoryInstance := getDressFactorySingleInstance()
+
+	for dressType, dress := range dressFactoryInstance.dressMap {
+		fmt.Printf("DressColorType: %s\nDressColor: %s\n", dressType, dress.getColor())
+	}
 }
