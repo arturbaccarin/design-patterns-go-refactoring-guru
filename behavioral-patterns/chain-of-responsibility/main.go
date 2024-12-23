@@ -27,4 +27,29 @@ the same data. Hence, you added another check which lets the request pass throug
 there’s no suitable cached response.
 
 The code of the checks, which had already looked like a mess, became more and more bloated as you added each new feature.
+Changing one check sometimes affected the others.
+
+Worst of all, when you tried to reuse the checks to protect other components of the system,
+you had to duplicate some of the code since those components required some of the checks, but not all of them.
+
+Like many other behavioral design patterns, the Chain of Responsibility relies on
+transforming particular behaviors into stand-alone objects called handlers.
+In our case, each check should be extracted to its own class with a single method that performs the check.
+The request, along with its data, is passed to this method as an argument.
+
+The pattern suggests that you link these handlers into a chain.
+Each linked handler has a field for storing a reference to the next handler in the chain.
+
+a handler can decide not to pass the request further down the chain and effectively stop any further processing.
+
+However, there’s a slightly different approach (and it’s a bit more canonical) in which, upon receiving a request,
+a handler decides whether it can process it. If it can, it doesn’t pass the request any further.
+So it’s either only one handler that processes the request or none at all.
+This approach is very common when dealing with events in stacks of elements within a graphical user interface.
+
+For instance, when a user clicks a button, the event propagates through the chain of GUI elements that
+starts with the button, goes along its containers (like forms or panels),
+and ends up with the main application window.
+
+It’s crucial that all handler classes implement the same interface.
 */
