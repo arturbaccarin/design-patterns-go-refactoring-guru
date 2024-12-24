@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 https://refactoring.guru/design-patterns/chain-of-responsibility
 
@@ -53,3 +55,127 @@ and ends up with the main application window.
 
 It’s crucial that all handler classes implement the same interface.
 */
+
+/*
+A hospital app. A hospital could have multiple departments such as:
+
+1. Reception
+2. Doctor
+3. Medical examination room
+4. Cashier
+
+The patient is being sent through a chain of departments, where each department sends
+the patient further down the chain once their function is completed.
+
+The pattern is applicable when there are multiple candidates to process the same request.
+It is also useful when you don’t want the client to choose the receiver as there are multiple objects can handle the request.
+Another useful case is when you want to decouple the client from receivers—the client will only need to know the first element in the chain.
+*/
+
+type Patient struct {
+	name              string
+	registrationDone  bool
+	doctorCheckUpDone bool
+	medicineDone      bool
+	paymentDone       bool
+}
+
+// Handler interface
+type Department interface {
+	execute(*Patient)
+	setNext(Department)
+}
+
+// Concrete handler
+type Reception struct {
+	next Department
+}
+
+func (r *Reception) setNext(next Department) {
+	r.next = next
+}
+
+func (r *Reception) execute(p *Patient) {
+	if p.registrationDone {
+		fmt.Println("Patient registration already done")
+		r.next.execute(p)
+		return
+	}
+	fmt.Println("Reception registering patient")
+	p.registrationDone = true
+	r.next.execute(p)
+}
+
+type Doctor struct {
+	next Department
+}
+
+func (d *Doctor) setNext(next Department) {
+	d.next = next
+}
+
+func (d *Doctor) execute(p *Patient) {
+	if p.doctorCheckUpDone {
+		fmt.Println("Doctor checkup already done")
+		d.next.execute(p)
+		return
+	}
+	fmt.Println("Doctor checking patient")
+	p.doctorCheckUpDone = true
+	d.next.execute(p)
+}
+
+type Medical struct {
+	next Department
+}
+
+func (m *Medical) setNext(next Department) {
+	m.next = next
+}
+
+func (m *Medical) execute(p *Patient) {
+	if p.medicineDone {
+		fmt.Println("Medicine already given to patient")
+		m.next.execute(p)
+		return
+	}
+	fmt.Println("Medical giving medicine to patient")
+	p.medicineDone = true
+	m.next.execute(p)
+}
+
+type Cashier struct {
+	next Department
+}
+
+func (c *Cashier) setNext(next Department) {
+	c.next = next
+}
+
+func (c *Cashier) execute(p *Patient) {
+	if p.paymentDone {
+		fmt.Println("Payment Done")
+	}
+	fmt.Println("Cashier getting money from patient patient")
+}
+
+func main() {
+
+	cashier := &Cashier{}
+
+	//Set next for medical department
+	medical := &Medical{}
+	medical.setNext(cashier)
+
+	//Set next for doctor department
+	doctor := &Doctor{}
+	doctor.setNext(medical)
+
+	//Set next for reception department
+	reception := &Reception{}
+	reception.setNext(doctor)
+
+	patient := &Patient{name: "abc"}
+	//Patient visiting
+	reception.execute(patient)
+}
