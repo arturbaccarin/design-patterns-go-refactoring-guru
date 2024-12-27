@@ -44,4 +44,18 @@ be linked to the same commands, preventing any code duplication.
 
 As a result, commands become a convenient middle layer that reduces coupling
 between the GUI and business logic layers.
+
+After a long walk through the city, you get to a nice restaurant and sit at
+the table by the window. A friendly waiter approaches you and quickly takes your order,
+writing it down on a piece of paper.
+The waiter goes to the kitchen and sticks the order on the wall.
+After a while, the order gets to the chef, who reads it and cooks the meal accordingly.
+The cook places the meal on a tray along with the order.
+The waiter discovers the tray, checks the order to make sure everything is as you wanted it,
+and brings everything to your table.
+
+The paper order serves as a command. It remains in a queue until the chef is ready to
+serve it. The order contains all the relevant information required to cook the meal.
+It allows the chef to start cooking right away instead of running around clarifying
+the order details from you directly.
 */
