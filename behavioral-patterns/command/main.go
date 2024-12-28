@@ -58,4 +58,6 @@ The paper order serves as a command. It remains in a queue until the chef is rea
 serve it. The order contains all the relevant information required to cook the meal.
 It allows the chef to start cooking right away instead of running around clarifying
 the order details from you directly.
+
+Commit of the day, because I'm studying other things now. 
 */
