@@ -59,5 +59,5 @@ serve it. The order contains all the relevant information required to cook the m
 It allows the chef to start cooking right away instead of running around clarifying
 the order details from you directly.
 
-Commit of the day, because I'm studying other things now 5!
+I`m going back tomorrow! Thank you a happy new year!
 */
