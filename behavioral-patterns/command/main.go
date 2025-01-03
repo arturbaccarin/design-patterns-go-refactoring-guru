@@ -1,4 +1,6 @@
-Opackage main
+package main
+
+import "fmt"
 
 /*
 https://refactoring.guru/design-patterns/command
@@ -60,4 +62,91 @@ It allows the chef to start cooking right away instead of running around clarify
 the order details from you directly.
 
 I`m going back tomorrow! Thank you a happy new year!
+
+Command is behavioral design pattern that converts requests or simple operations into objects.
+
+Let’s look at the Command pattern with the case of a TV. A TV can be turned ON by either:
+    1. ON Button on the remote;
+    2. ON Button on the actual TV.
+
+We can start by implementing the ON command object with the TV as a receiver.
+
+The last part is defining an invoker. We’ll actually have two invokers: the remote and the TV itself.
+
+There’s no need to develop different handlers for each of the invokers.
+The command object contains all the information it needs to execute.
+Hence it can also be used for delayed execution.
 */
+
+// Invoker
+type Button struct {
+	command Command
+}
+
+func (b *Button) press() {
+	b.command.execute()
+}
+
+type Command interface {
+	execute()
+}
+
+// Concrete command
+type OnCommand struct {
+	device Device
+}
+
+func (c *OnCommand) execute() {
+	c.device.on()
+}
+
+type OffCommand struct {
+	device Device
+}
+
+func (c *OffCommand) execute() {
+	c.device.off()
+}
+
+// Receiver interface
+type Device interface {
+	on()
+	off()
+}
+
+// Concrete receiver
+type TV struct {
+	isRunning bool
+}
+
+func (t *TV) on() {
+	t.isRunning = true
+	fmt.Println("Turning tv on")
+}
+
+func (t *TV) off() {
+	t.isRunning = false
+	fmt.Println("Turning tv off")
+}
+
+func main() {
+	tv := &TV{}
+
+	onCommand := &OnCommand{
+		device: tv,
+	}
+
+	offCommand := &OffCommand{
+		device: tv,
+	}
+
+	onButton := &Button{
+		command: onCommand,
+	}
+	onButton.press()
+
+	offButton := &Button{
+		command: offCommand,
+	}
+	offButton.press()
+}
