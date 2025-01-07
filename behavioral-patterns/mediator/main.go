@@ -1,6 +1,10 @@
 package main
 
+import "fmt"
+
 /*
+https://refactoring.guru/design-patterns/mediator
+
 Mediator is a behavioral design pattern that lets you reduce chaotic
 dependencies between objects.
 
@@ -48,23 +52,93 @@ The tower doesn’t need to control the whole flight. It exists only
 to enforce constraints in the terminal area because the number of
 involved actors there might be overwhelming to a pilot.
 */
+// Mediator Interface
 type Mediator interface {
-	notify(sender Component, event string)
+	Notify(sender Colleague, event string)
 }
 
-type Component interface {
-	setMediator(mediator Mediator)
+// Colleague Interface
+type Colleague interface {
+	SetMediator(mediator Mediator)
+	Send(event string)
+	Receive(event string)
 }
 
-type Button struct {
+// Concrete Mediator
+type ConcreteMediator struct {
+	colleague1 Colleague
+	colleague2 Colleague
+}
+
+func (m *ConcreteMediator) SetColleague1(c Colleague) {
+	m.colleague1 = c
+}
+
+func (m *ConcreteMediator) SetColleague2(c Colleague) {
+	m.colleague2 = c
+}
+
+func (m *ConcreteMediator) Notify(sender Colleague, event string) {
+	if sender == m.colleague1 {
+		m.colleague2.Receive(event)
+	} else {
+		m.colleague1.Receive(event)
+	}
+}
+
+// Concrete Colleague 1
+type ConcreteColleague1 struct {
 	mediator Mediator
 }
 
-type Textbox struct {
+func (c *ConcreteColleague1) SetMediator(mediator Mediator) {
+	c.mediator = mediator
+}
+
+func (c *ConcreteColleague1) Send(event string) {
+	fmt.Println("Colleague 1 sends:", event)
+	c.mediator.Notify(c, event)
+}
+
+func (c *ConcreteColleague1) Receive(event string) {
+	fmt.Println("Colleague 1 receives:", event)
+}
+
+// Concrete Colleague 2
+type ConcreteColleague2 struct {
 	mediator Mediator
 }
 
-type Dialog struct {
-	title string
-	loginOrRegisterChkBx
+func (c *ConcreteColleague2) SetMediator(mediator Mediator) {
+	c.mediator = mediator
+}
+
+func (c *ConcreteColleague2) Send(event string) {
+	fmt.Println("Colleague 2 sends:", event)
+	c.mediator.Notify(c, event)
+}
+
+func (c *ConcreteColleague2) Receive(event string) {
+	fmt.Println("Colleague 2 receives:", event)
+}
+
+func main() {
+	mediator := &ConcreteMediator{}
+
+	colleague1 := &ConcreteColleague1{}
+	colleague2 := &ConcreteColleague2{}
+
+	// Set the mediator for both colleagues
+	colleague1.SetMediator(mediator)
+	colleague2.SetMediator(mediator)
+
+	// Set up the relationship in the mediator
+	mediator.SetColleague1(colleague1)
+	mediator.SetColleague2(colleague2)
+
+	// Colleague 1 sends a message
+	colleague1.Send("Hello from Colleague 1")
+
+	// Colleague 2 sends a message
+	colleague2.Send("Hello from Colleague 2")
 }
