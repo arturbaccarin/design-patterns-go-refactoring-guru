@@ -1,6 +1,8 @@
 package main
 
 /*
+
+Não 123
 https://refactoring.guru/design-patterns/state
 
 State is a behavioral design pattern that lets an object alter its behavior
