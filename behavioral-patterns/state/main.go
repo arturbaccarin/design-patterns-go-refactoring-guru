@@ -1,8 +1,6 @@
 package main
 
 /*
-
-Não 123
 https://refactoring.guru/design-patterns/state
 
 State is a behavioral design pattern that lets an object alter its behavior
@@ -58,4 +56,19 @@ state of the device:
 1. When the phone is unlocked, pressing buttons leads to executing various functions.
 2. When the phone is locked, pressing any button leads to the unlock screen.
 3. When the phone’s charge is low, pressing any button shows the charging screen.
+
+State is a behavioral design pattern that allows an object to change the behavior when its internal state changes.
+
+Let’s apply the State Design Pattern in the context of vending machines.
+That a vending machine can be in 4 different states:
+1. hasItem
+2. noItem
+3. itemRequested
+4. hasMoney
+
+A vending machine will also have different actions. Again for simplicity lets assume that there are only four actions:
+Select the item
+1. Add the item
+2. Insert money
+3. Dispense item
 */
