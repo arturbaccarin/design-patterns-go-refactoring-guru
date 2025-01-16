@@ -49,3 +49,15 @@ Imagine that you have to get to the airport. You can catch a bus, order a cab,
 or get on your bicycle. These are your transportation strategies. You can pick
 one of the strategies depending on factors such as budget or time constraints.
 */
+
+/*
+Code example:
+
+Suppose you are building an In-Memory-Cache. Since it’s in memory, it has a limited size.
+Whenever it reaches its maximum size, some entries have to be evicted to free-up space.
+This can happen via several algorithms. Some of the popular algorithms are:
+
+Least Recently Used (LRU): remove an entry that has been used least recently.
+First In, First Out (FIFO): remove an entry that was created first.
+Least Frequently Used (LFU): remove an entry that was least frequently used.
+*/
