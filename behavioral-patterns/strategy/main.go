@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 https://refactoring.guru/design-patterns/strategy
 
@@ -57,7 +59,100 @@ Suppose you are building an In-Memory-Cache. Since it’s in memory, it has a li
 Whenever it reaches its maximum size, some entries have to be evicted to free-up space.
 This can happen via several algorithms. Some of the popular algorithms are:
 
-Least Recently Used (LRU): remove an entry that has been used least recently.
-First In, First Out (FIFO): remove an entry that was created first.
-Least Frequently Used (LFU): remove an entry that was least frequently used.
+1. Least Recently Used (LRU): remove an entry that has been used least recently.
+2. First In, First Out (FIFO): remove an entry that was created first.
+3. Least Frequently Used (LFU): remove an entry that was least frequently used.
+
+The problem is how to decouple our cache class from these algorithms so that we can change the
+algorithm at run time. Also, the cache class should not change when a new algorithm is being added.
+
+This is where Strategy pattern comes into the picture. It suggests creating a family of the
+algorithm with each algorithm having its own class. Each of these classes follows the same interface,
+and this makes the algorithm interchangeable within the family. Let’s say the common interface name is evictionAlgo.
 */
+
+// Strategy interface
+type EvictionAlgo interface {
+	evict(c *Cache)
+}
+
+// Concrete strategy
+type Fifo struct {
+}
+
+func (l *Fifo) evict(c *Cache) {
+	fmt.Println("Evicting by fifo strtegy")
+}
+
+type Lru struct {
+}
+
+func (l *Lru) evict(c *Cache) {
+	fmt.Println("Evicting by lru strtegy")
+}
+
+type Lfu struct {
+}
+
+func (l *Lfu) evict(c *Cache) {
+	fmt.Println("Evicting by lfu strtegy")
+}
+
+// Context
+type Cache struct {
+	storage      map[string]string
+	evictionAlgo EvictionAlgo
+	capacity     int
+	maxCapacity  int
+}
+
+func initCache(e EvictionAlgo) *Cache {
+	storage := make(map[string]string)
+	return &Cache{
+		storage:      storage,
+		evictionAlgo: e,
+		capacity:     0,
+		maxCapacity:  2,
+	}
+}
+
+func (c *Cache) setEvictionAlgo(e EvictionAlgo) {
+	c.evictionAlgo = e
+}
+
+func (c *Cache) add(key, value string) {
+	if c.capacity == c.maxCapacity {
+		c.evict()
+	}
+	c.capacity++
+	c.storage[key] = value
+}
+
+func (c *Cache) get(key string) {
+	delete(c.storage, key)
+}
+
+func (c *Cache) evict() {
+	c.evictionAlgo.evict(c)
+	c.capacity--
+}
+
+func main() {
+	lfu := &Lfu{}
+	cache := initCache(lfu)
+
+	cache.add("a", "1")
+	cache.add("b", "2")
+
+	cache.add("c", "3")
+
+	lru := &Lru{}
+	cache.setEvictionAlgo(lru)
+
+	cache.add("d", "4")
+
+	fifo := &Fifo{}
+	cache.setEvictionAlgo(fifo)
+
+	cache.add("e", "5")
+}
