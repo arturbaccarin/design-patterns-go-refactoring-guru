@@ -31,4 +31,10 @@ As you can see, we’ve got two types of steps:
 - abstract steps must be implemented by every subclass
 - optional steps already have some default implementation,
 but still can be overridden if needed
+
+There’s another type of step, called hooks.
+A hook is an optional step with an empty body.
+A template method would work even if a hook isn’t overridden.
+Usually, hooks are placed before and after crucial steps of algorithms,
+providing subclasses with additional extension points for an algorithm.
 */
