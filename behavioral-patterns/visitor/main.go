@@ -3,7 +3,7 @@ package main
 /*
 https://refactoring.guru/design-patterns/visitor
 
-the last one
+commit of the day
 
 Visitor is a behavioral design pattern that lets you separate
 algorithms from the objects on which they operate.
