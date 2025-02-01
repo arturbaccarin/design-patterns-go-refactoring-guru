@@ -53,4 +53,5 @@ func main() {
 	folder1.Add(folder2)
 
 	folder1.Display()
+folder2.Display()
 }
