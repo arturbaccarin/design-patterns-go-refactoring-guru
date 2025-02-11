@@ -1,51 +1,24 @@
 package main
 
-/*
-Let’s say we want to represent a proxy that controls access to a real image
-object (like loading an image only when it’s needed). We'll have a RealImage
-object that loads an image, and a ProxyImage object that controls when the
-real image is loaded.
-*/
+// var name type = expression
+var myName = "Go"
 
-type Image interface {
-	Display()
-}
+// var s type
+var s string
 
-type RealImage struct {
-	fileName string
-}
+// var s type = expression
+var s string = "Go"
 
-func (r *RealImage) Display() {
-	println("Displaying", r.fileName)
-}
+// var i, j, k type
+var i, j, k int // i, j, k = 0
 
-func NewRealImage(fileName string) *RealImage {
-	return &RealImage{fileName: fileName}
-}
+var b, f, s = true, 2.3, "four" // bool, float64, string
 
-type ProxyImage struct {
-	realImage *RealImage
-	name      string
-}
+// Short Variable Declarations
+t := 0.0
+g := 10
+k := "Go"
 
-func NewProxyImage(fileName string) *ProxyImage {
-	return &ProxyImage{name: fileName}
-}
-
-func (p *ProxyImage) Display() {
-	if p.realImage == nil {
-		p.realImage = NewRealImage(p.name)
-	}
-	p.realImage.Display()
-}
-
-func main() {
-	var image1 Image = NewProxyImage("image1.jpg")
-	var image2 Image = NewProxyImage("image2.png")
-
-	image1.Display()
-
-	image1.Display()
-
-	image2.Display()
-}
+// Attention
+s := 0
+s = 0
