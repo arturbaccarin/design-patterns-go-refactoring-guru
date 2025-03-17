@@ -1,5 +1,18 @@
 package main
 
+/*
+In this exercise, you will implement the Mediator design pattern by
+simulating an air traffic control system. A FlightControlTower (mediator)
+will manage communication between Airplane objects.
+When an airplane requests an altitude change, it informs the tower,
+which then notifies all other planes about the change. This ensures
+that airplanes don't communicate directly with each other but
+instead interact through the tower. You'll create the necessary
+interfaces and types for the mediator and aircraft, and simulate
+altitude change requests, observing how the tower facilitates
+communication between planes.
+*/
+
 import (
 	"fmt"
 )

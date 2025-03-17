@@ -2,6 +2,19 @@ package main
 
 import "fmt"
 
+/*
+Imagine you’re developing a text editor that needs
+an undo feature to revert changes. To achieve this,
+implement the Memento design pattern, which captures
+and restores an object’s state without exposing its
+internal structure. Create a TextEditor class to manage
+text input, a Memento to store text states, and a
+Caretaker to handle the undo functionality by saving
+and restoring text states. Ensure the editor can save
+its state, modify the text, and undo changes, printing
+the text after each operation.
+*/
+
 type Memento struct {
 	text string
 }
